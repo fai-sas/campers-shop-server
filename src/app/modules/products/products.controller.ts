@@ -50,9 +50,22 @@ const updateProduct = catchAsync(async (req, res) => {
   })
 })
 
+const deleteProduct = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await ProductServices.deleteProductFromDB(id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product Deleted successfully',
+    data: result,
+  })
+})
+
 export const ProductControllers = {
   createProduct,
   getAllProducts,
   getSingleProduct,
   updateProduct,
+  deleteProduct,
 }
