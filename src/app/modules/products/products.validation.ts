@@ -25,7 +25,7 @@ const createProductValidationSchema = z.object({
     ratings: z.number({
       required_error: 'The ratings of the product is required',
     }),
-    images: z.array(z.string()).min(1, 'At least one image is required'),
+    // images: z.array(z.string()).min(1, 'At least one image is required'),
   }),
 })
 

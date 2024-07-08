@@ -1,15 +1,25 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { ProductSearchableFields } from './products.constants'
 import TProduct from './products.interface'
 import { Product } from './products.model'
 import AppError from '../../errors/AppError'
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 
-const createProductIntoDb = async (payload: TProduct) => {
+const createProductIntoDb = async (file: any, payload: TProduct) => {
   const existingProduct = await Product.findOne({ name: payload.name })
 
   if (existingProduct) {
     throw new Error('Product already exists')
+  }
+
+  if (file) {
+    const imageName = `1`
+    const path = file?.path
+    //send image to cloudinary
+    const { secure_url } = await sendImageToCloudinary(imageName, path)
+    payload.images = secure_url as string[]
   }
 
   const result = await Product.create(payload)

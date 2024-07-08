@@ -4,7 +4,7 @@ import catchAsync from '../../utils/catchAsync'
 import { ProductServices } from './products.service'
 
 const createProduct = catchAsync(async (req, res) => {
-  const result = await ProductServices.createProductIntoDb(req.body)
+  const result = await ProductServices.createProductIntoDb(req.file, req.body)
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
