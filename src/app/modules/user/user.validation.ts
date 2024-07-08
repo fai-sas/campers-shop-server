@@ -12,9 +12,11 @@ const signUpUserValidationSchema = z.object({
         invalid_type_error: 'Password must be string',
       })
       .max(20, { message: 'Password can not be more than 20 characters' }),
-    role: z.enum(['user', 'admin'], {
-      errorMap: () => ({ message: 'Role must be either user or admin' }),
-    }),
+    role: z
+      .enum(['user', 'admin'], {
+        errorMap: () => ({ message: 'Role must be either user or admin' }),
+      })
+      .default('user'),
     address: z.string(),
   }),
 })
