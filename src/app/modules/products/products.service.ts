@@ -1,7 +1,9 @@
+import httpStatus from 'http-status'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { ProductSearchableFields } from './products.constants'
 import TProduct from './products.interface'
 import { Product } from './products.model'
+import AppError from '../../errors/AppError'
 
 const createProductIntoDb = async (payload: TProduct) => {
   const existingProduct = await Product.findOne({ name: payload.name })
@@ -32,7 +34,18 @@ const getAllProductsFromDB = async (query: Record<string, unknown>) => {
   }
 }
 
+const getSingleProductFromDb = async (id: string) => {
+  const result = await Product.findById(id)
+
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Car Not Found')
+  }
+
+  return result
+}
+
 export const ProductServices = {
   createProductIntoDb,
   getAllProductsFromDB,
+  getSingleProductFromDb,
 }
