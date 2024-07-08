@@ -44,8 +44,24 @@ const getSingleProductFromDb = async (id: string) => {
   return result
 }
 
+const updateProductIntoDb = async (id: string, payload: Partial<TProduct>) => {
+  const isProductExists = await Product.findById(id)
+
+  if (!isProductExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Car Not Found')
+  }
+
+  const result = await Product.findByIdAndUpdate(id, payload, {
+    new: true,
+    runValidators: true,
+  })
+
+  return result
+}
+
 export const ProductServices = {
   createProductIntoDb,
   getAllProductsFromDB,
   getSingleProductFromDb,
+  updateProductIntoDb,
 }
