@@ -39,8 +39,21 @@ const getSingleCart = catchAsync(async (req, res) => {
   })
 })
 
+const deleteCart = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await CartServices.deleteCartFromDB(id)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Cart Item Deleted successfully',
+    data: result,
+  })
+})
+
 export const CartControllers = {
   createCart,
   getAllCarts,
   getSingleCart,
+  deleteCart,
 }

@@ -43,8 +43,14 @@ const getSingleCartFromDb = async (id: string) => {
   return result.populate('cartProduct')
 }
 
+const deleteCartFromDB = async (_id: string) => {
+  const result = await Cart.deleteOne({ _id })
+  return result
+}
+
 export const CartServices = {
   createCartIntoDb,
   getAllCartsFromDB,
   getSingleCartFromDb,
+  deleteCartFromDB,
 }
