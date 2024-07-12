@@ -15,10 +15,6 @@ const productSchema = new Schema<TProduct>(
       type: Number,
       required: [true, 'Product stock is required'],
     },
-    // quantity: {
-    //   type: Number,
-    //   required: [true, 'Product quantity is required'],
-    // },
     description: {
       type: String,
       required: [true, 'Product description is required'],
