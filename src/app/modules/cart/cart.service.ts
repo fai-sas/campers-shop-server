@@ -5,18 +5,6 @@ import { Cart } from './cart.model'
 import AppError from '../../errors/AppError'
 import QueryBuilder from '../../builder/QueryBuilder'
 
-// const createCartIntoDb = async (payload: TCart) => {
-//   const isProductExists = await Product.findById(payload?.cartProduct)
-
-//   if (!isProductExists) {
-//     throw new Error('Product does not exists')
-//   }
-
-//   const result = await Cart.create(payload)
-
-//   return result.populate('cartProduct')
-// }
-
 const createCartIntoDb = async (payload: TCart) => {
   const isProductExists = await Product.findById(payload?.cartProduct)
 
@@ -68,22 +56,6 @@ const getSingleCartFromDb = async (id: string) => {
 
   return result.populate('cartProduct')
 }
-
-// const updateCartQuantity = async (id: string, quantity: number) => {
-//   const cartItem = await Cart.findById(id)
-//   if (!cartItem) {
-//     throw new AppError(httpStatus.NOT_FOUND, 'Requested Cart Item Not Found')
-//   }
-
-//   const product = await Product.findById(cartItem.cartProduct)
-//   if (quantity > product?.stock) {
-//     throw new Error('Exceeds available stock')
-//   }
-
-//   cartItem.quantity = quantity
-//   await cartItem.save()
-//   return cartItem.populate('cartProduct')
-// }
 
 const updateCartIntoDb = async (id: string, payload: Partial<TCart>) => {
   if (typeof payload.quantity !== 'number' || isNaN(payload.quantity)) {
