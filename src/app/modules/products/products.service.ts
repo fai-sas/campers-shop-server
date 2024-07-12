@@ -5,7 +5,7 @@ import { ProductSearchableFields } from './products.constants'
 import TProduct from './products.interface'
 import { Product } from './products.model'
 import AppError from '../../errors/AppError'
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
+// import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 
 const createProductIntoDb = async (file: any, payload: TProduct) => {
   const existingProduct = await Product.findOne({ name: payload.name })
@@ -14,13 +14,13 @@ const createProductIntoDb = async (file: any, payload: TProduct) => {
     throw new Error('Product already exists')
   }
 
-  if (file) {
-    const imageName = `1`
-    const path = file?.path
-    //send image to cloudinary
-    const { secure_url } = await sendImageToCloudinary(imageName, path)
-    payload.images = secure_url as string[]
-  }
+  // if (file) {
+  //   const imageName = `1`
+  //   const path = file?.path
+  //   //send image to cloudinary
+  //   const { secure_url } = await sendImageToCloudinary(imageName, path)
+  //   payload.image = secure_url as string
+  // }
 
   const result = await Product.create(payload)
 
@@ -58,7 +58,7 @@ const updateProductIntoDb = async (id: string, payload: Partial<TProduct>) => {
   const isProductExists = await Product.findById(id)
 
   if (!isProductExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Requested Car Not Found')
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Product Not Found')
   }
 
   const result = await Product.findByIdAndUpdate(id, payload, {

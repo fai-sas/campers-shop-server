@@ -9,7 +9,7 @@ class QueryBuilder<T> {
     this.query = query
   }
 
-  search(searchableFields: string[]) {
+    search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm
     if (searchTerm) {
       this.modelQuery = this.modelQuery.find({
@@ -29,26 +29,60 @@ class QueryBuilder<T> {
     const queryObj = { ...this.query } // copy
 
     // Filtering
-    const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields']
+    const excludeFields = [
+      'searchTerm',
+      'sort',
+      'limit',
+      'page',
+      'fields',
+      'priceRange',
+    ]
 
     excludeFields.forEach((el) => delete queryObj[el])
+
+    if (queryObj.category === '') {
+      delete queryObj.category
+    }
+
+    if (this.query.priceRange) {
+      const [minPrice, maxPrice] = this.query.priceRange as number[]
+      queryObj.price = { $gte: minPrice, $lte: maxPrice }
+    }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>)
 
     return this
   }
 
+  // sort() {
+  //   const sort = (this.query.sort as string)?.split(',')?.join(' ') || '-price'
+  //   this.modelQuery = this.modelQuery.sort(sort)
+
+  //   return this
+  // }
+
   sort() {
-    const sort =
-      (this?.query?.sort as string)?.split(',')?.join(' ') || '-createdAt'
-    this.modelQuery = this.modelQuery.sort(sort as string)
+    const sortParam = this.query.sort as string
+    let sortCriteria = {}
+
+    if (sortParam) {
+      if (sortParam === 'priceAsc') {
+        sortCriteria = { price: 1 }
+      } else if (sortParam === 'priceDesc') {
+        sortCriteria = { price: -1 }
+      }
+    } else {
+      sortCriteria = { price: -1 }
+    }
+
+    this.modelQuery = this.modelQuery.sort(sortCriteria)
 
     return this
   }
 
   paginate() {
-    const page = Number(this?.query?.page) || 1
-    const limit = Number(this?.query?.limit) || 10
+    const page = Number(this.query.page) || 1
+    const limit = Number(this.query.limit) || 10
     const skip = (page - 1) * limit
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit)
@@ -58,7 +92,7 @@ class QueryBuilder<T> {
 
   fields() {
     const selectFields =
-      (this?.query?.fields as string)?.split(',')?.join(' ') || '-__v'
+      (this.query.fields as string)?.split(',')?.join(' ') || '-__v'
 
     this.modelQuery = this.modelQuery.select(selectFields)
     return this
@@ -67,8 +101,8 @@ class QueryBuilder<T> {
   async countTotal() {
     const totalQueries = this.modelQuery.getFilter()
     const total = await this.modelQuery.model.countDocuments(totalQueries)
-    const page = Number(this?.query?.page) || 1
-    const limit = Number(this?.query?.limit) || 10
+    const page = Number(this.query.page) || 1
+    const limit = Number(this.query.limit) || 10
     const totalPage = Math.ceil(total / limit)
 
     return {
