@@ -8,6 +8,12 @@ const cartSchema = new Schema<TCart>(
       required: [true, 'Product is required'],
       ref: 'Product',
     },
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
+      default: 1,
+    },
   },
   {
     timestamps: true,

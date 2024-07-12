@@ -9,6 +9,8 @@ router.get('/', CartControllers.getAllCarts)
 
 router.get('/:id', CartControllers.getSingleCart)
 
+router.put('/:id', CartControllers.updateCart)
+
 router.delete('/:id', CartControllers.deleteCart)
 
 export const CartRoutes = router

@@ -39,6 +39,27 @@ const getSingleCart = catchAsync(async (req, res) => {
   })
 })
 
+const updateCart = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const { quantity } = req.body
+
+  if (!quantity || typeof quantity !== 'number' || isNaN(quantity)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Quantity must be a valid number',
+    })
+  }
+
+  const result = await CartServices.updateCartIntoDb(id, { quantity })
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product updated successfully',
+    data: result,
+  })
+})
+
 const deleteCart = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await CartServices.deleteCartFromDB(id)
@@ -55,5 +76,6 @@ export const CartControllers = {
   createCart,
   getAllCarts,
   getSingleCart,
+  updateCart,
   deleteCart,
 }
